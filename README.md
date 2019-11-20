@@ -80,7 +80,7 @@ Both `ApiPollerWorkerOptions` and `Msg<T>` come from [`@brianmcallister/api-poll
 
 #### `Msg<T>`
 
-Represents the contents of the message.
+Represents the contents of a message from the underlying polling library.
 
 ```ts
 import { Msg } from '@brianmcallister/use-api-poller-worker';
