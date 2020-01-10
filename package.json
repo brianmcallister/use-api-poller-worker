@@ -1,7 +1,7 @@
 {
-  "name": "@brianmcallister/use-api-poller-worker",
+  "name": "use-api-poller-worker",
   "version": "0.0.1",
-  "description": "React hook for @brianmcallister/api-poller-worker",
+  "description": "React hook for api-poller-worker",
   "main": "dist/useApiPollerWorker.js",
   "repository": "brianmcallister/use-api-poller-worker",
   "license": "MIT",
@@ -30,7 +30,7 @@
     "types": "tsc --noEmit"
   },
   "dependencies": {
-    "@brianmcallister/api-poller-worker": "^1.1.0"
+    "api-poller-worker": "^1.1.0"
   },
   "optionalDependencies": {
     "@types/react": "^16.9.11"

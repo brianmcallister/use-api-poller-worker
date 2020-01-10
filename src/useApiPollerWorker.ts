@@ -1,7 +1,5 @@
-import { ApiPollerWorker, ApiPollerWorkerOptions, Msg } from '@brianmcallister/api-poller-worker';
+import { ApiPollerWorker, ApiPollerWorkerOptions, Msg } from 'api-poller-worker';
 import React from 'react';
-
-export { Msg } from '@brianmcallister/api-poller-worker';
 
 /**
  * Hook for subscribing to ApiPollerWorker.
