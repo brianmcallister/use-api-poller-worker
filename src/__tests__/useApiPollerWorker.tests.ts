@@ -3,12 +3,12 @@ global.self = global;
 
 /* eslint-disable import/first */
 import { renderHook } from '@testing-library/react-hooks';
-import { ApiPollerWorker } from '@brianmcallister/api-poller-worker';
+import { ApiPollerWorker } from 'api-poller-worker';
 
 import useApiPollerWorker from '../useApiPollerWorker';
 /* eslint-enable import/first */
 
-jest.mock('@brianmcallister/api-poller-worker', () => ({
+jest.mock('api-poller-worker', () => ({
   ApiPollerWorker: jest.fn(() => ({
     start: jest.fn(),
     stop: jest.fn(),
