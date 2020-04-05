@@ -1,6 +1,6 @@
 {
   "name": "use-api-poller-worker",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "React hook for api-poller-worker",
   "main": "dist/useApiPollerWorker.js",
   "repository": "brianmcallister/use-api-poller-worker",
