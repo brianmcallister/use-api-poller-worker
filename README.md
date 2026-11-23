@@ -1,6 +1,6 @@
 # use-api-poller-worker
 
-[![npm version](https://img.shields.io/npm/v/use-api-poller-worker?label=version&color=%2354C536&logo=npm)](https://www.npmjs.com/package/use-api-poller-worker)
+[![CI](https://github.com/brianmcallister/use-api-poller-worker/actions/workflows/ci.yml/badge.svg)](https://github.com/brianmcallister/use-api-poller-worker/actions/workflows/ci.yml) [![npm version](https://img.shields.io/npm/v/use-api-poller-worker?label=version&color=%2354C536&logo=npm)](https://www.npmjs.com/package/use-api-poller-worker)
 
 > React hook for api-poller-worker
 
@@ -11,10 +11,9 @@
 - [Installation](#installation)
 - [Usage](#usage)
 - [API](#api)
-  - Functions
-    - [`useApiPollerWorker`](#useapipollerworker)
-  - Types
-    - [`Msg<T>`](#msgt)
+  - [`useApiPollerWorker`](#useapipollerworker)
+  - [Types](#types)
+- [Upgrading from 1.x](#upgrading-from-1x)
 
 ###### [⇡ Top](#table-of-contents)
 
@@ -28,70 +27,82 @@ npm install use-api-poller-worker
 
 ## Usage
 
-This hook takes the same options as the `ApiPollerWorker` class from [`api-poller-worker`](https://github.com/brianmcallister/api-poller-worker), plus an extra `callback` argument which will be called when the underlying worker emits a message.
+```tsx
+import { useState } from 'react';
+import useApiPollerWorker from 'use-api-poller-worker';
 
-It's recommended to wrap your callback in `React.useCallback`, so that your app does not unnecessarily re-render multiple times.
+const Products = () => {
+  const [products, setProducts] = useState<Record<string, Product>>({});
 
-```ts
-const MyComponent = () => {
-  const [items, setItems] = React.useState<Item>(null);
-  const callback = React.useCallback<(data: Msg<Item>) => void>(data => {
-    setItems(data);
-  }, [setItems]);
+  useApiPollerWorker<Product>(
+    { inline: true, apiUrl: 'https://example.com/api/products' },
+    (msg) => {
+      setProducts((current) => {
+        const next = { ...current, ...msg.newItems.byId, ...msg.updatedItems.byId };
 
-  useApiPollerWorker<Item>({
-    workerUrl: '<my api endpoint>',
-  }, callback);
+        for (const id of msg.removedItems) {
+          delete next[id];
+        }
 
-  return {
-    <div>
-      {items}
-    </div>
-  };
+        return next;
+      });
+    },
+    (error) => {
+      console.error('Polling failed', error);
+    },
+  );
+
+  return (
+    <ul>
+      {Object.values(products).map((product) => (
+        <li key={product.id}>{product.name}</li>
+      ))}
+    </ul>
+  );
 };
 ```
+
+The hook starts polling when the component mounts, and shuts the worker down when it unmounts. The worker is only replaced when the options change, so the callbacks can be new functions on every render. There's no need for `useCallback`.
 
 ###### [⇡ Top](#table-of-contents)
 
 ## API
 
-### Functions
+### `useApiPollerWorker`
 
-#### `useApiPollerWorker`
-
-This is the default export.
+The default export, also available as a named export.
 
 ```ts
-import useApiPollerWorker from 'use-api-poller-worker';
-
-function useApiPollerWorker<T extends {}>(
+useApiPollerWorker<T>(
   options: ApiPollerWorkerOptions,
-  callback: (data: Msg<T>) => void,
-)
+  onMessage: (msg: Msg<T>) => void,
+  onError?: (error: Error) => void,
+): void;
 ```
 
-Both `ApiPollerWorkerOptions` and `Msg<T>` come from [`api-poller-worker`](https://github.com/brianmcallister/api-poller-worker). You might want to import `Msg<T>` for type safety. This library re-exports `Msg<T>` for convenience.
+- `options`: the same options as [`ApiPollerWorker`](https://github.com/brianmcallister/api-poller-worker#apipollerworkeroptions). Use `inline` with `apiUrl` for the worker built into `api-poller-worker`, or `worker` or `workerUrl` for your own.
+- `onMessage`: called with what changed after each response. See [`Msg<T>`](https://github.com/brianmcallister/api-poller-worker#msgt).
+- `onError`: called when a request fails or the response isn't an array of objects.
 
-`useApiPollerWorker` also accepts a generic, `T` for the type of resource you're polling.
-
-###### [⇡ Top](#table-of-contents)
+`T` is the type of the objects the API returns.
 
 ### Types
 
-#### `Msg<T>`
-
-Represents the contents of a message from the underlying polling library.
+`Msg<T>`, `Records<T>` and `ApiPollerWorkerOptions` are re-exported from `api-poller-worker`, along with `createEmptyMsg`:
 
 ```ts
-import { Msg } from 'use-api-poller-worker';
+import { createEmptyMsg, type Msg } from 'use-api-poller-worker';
 ```
 
-```ts
-interface Msg<T> {
-  newItems: Records<T>;
-  updatedItems: Records<T>;
-  removedItems: string[];
-}
-```
+###### [⇡ Top](#table-of-contents)
+
+## Upgrading from 1.x
+
+- The hook uses `api-poller-worker` 2, where inline workers work and errors are reported. See its [upgrade notes](https://github.com/brianmcallister/api-poller-worker#upgrading-from-1x).
+- React is a peer dependency of version 18 or later.
+- There's a new optional `onError` argument.
+- The package has an `exports` map, so deep imports from `dist/` no longer work.
+
+See the [changelog](CHANGELOG.md) for everything else.
 
 ###### [⇡ Top](#table-of-contents)
