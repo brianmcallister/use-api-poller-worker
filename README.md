@@ -1,6 +1,6 @@
 # use-api-poller-worker
 
-[![codecov](https://codecov.io/gh/brianmcallister/use-api-poller-worker/branch/master/graph/badge.svg)](https://codecov.io/gh/brianmcallister/use-api-poller-worker) [![CircleCI](https://circleci.com/gh/brianmcallister/use-api-poller-worker.svg?style=svg)](https://circleci.com/gh/brianmcallister/use-api-poller-worker) [![npm version](https://img.shields.io/npm/v/use-api-poller-worker?label=version&color=%2354C536&logo=npm)](https://www.npmjs.com/package/use-api-poller-worker)
+[![npm version](https://img.shields.io/npm/v/use-api-poller-worker?label=version&color=%2354C536&logo=npm)](https://www.npmjs.com/package/use-api-poller-worker)
 
 > React hook for api-poller-worker
 
