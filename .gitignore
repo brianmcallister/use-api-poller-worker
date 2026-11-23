@@ -1,7 +1,4 @@
 node_modules
 dist
-workers-dist
-.eslintcache
-.env
 coverage
-demo
+*.tgz
